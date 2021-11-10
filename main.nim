@@ -40,7 +40,6 @@ var i = 0
 while true:
   if i == depth:
     i = 0
-  tick()
 
   ctx.fillStyle = rgba(255, 255, 255, 255)
   ctx.fillRect(rect(start_pos,vec2(SCREEN_SIZE,SCREEN_SIZE)))
