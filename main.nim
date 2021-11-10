@@ -1,4 +1,5 @@
 import pixie/demo
+import std/os
 
 const SCREEN_SIZE = 600
 
@@ -8,12 +9,11 @@ screen.fill(rgba(255, 255, 255, 255))
 let ctx = newContext(screen)
 ctx.fillStyle = rgba(255, 0, 0, 255)
 
-proc sierpinski(depth: var int, size: float, pos: var Vec2) =
+proc sierpinski(depth: sink int, size: float, pos: sink Vec2) =
   if depth == 0:
     return
 
   let new_size: Vec2 = vec2(size / 3, size / 3)
-  var new_depth = depth - 1 
   let initial_pos = vec2(pos)
   var x = pos[0]
   var y = pos[1]
@@ -22,8 +22,7 @@ proc sierpinski(depth: var int, size: float, pos: var Vec2) =
     if i == 5:
       ctx.fillRect(rect(pos,new_size))
     else:
-      var copy = pos
-      sierpinski(new_depth, new_size[0],copy)
+      sierpinski(depth - 1, new_size[0],pos)
 
     if i mod 3 == 0:
       x = initial_pos[0]
@@ -34,9 +33,20 @@ proc sierpinski(depth: var int, size: float, pos: var Vec2) =
 
   tick()
   
-var depth = 5
+var depth = 6
 var start_pos = vec2(0,0)
-sierpinski(depth, SCREEN_SIZE, start_pos)
+var i = 0
 
 while true:
-  continue
+  if i == depth:
+    i = 0
+  tick()
+
+  ctx.fillStyle = rgba(255, 255, 255, 255)
+  ctx.fillRect(rect(start_pos,vec2(SCREEN_SIZE,SCREEN_SIZE)))
+
+  ctx.fillStyle = rgba(255, 0, 0, 255)
+  sierpinski(i, SCREEN_SIZE, start_pos)
+  sleep(1000)
+
+  inc(i)
